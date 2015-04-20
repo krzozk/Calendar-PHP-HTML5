@@ -3,7 +3,11 @@
 setlocale( LC_TIME, 'spanish' );
 // Si no se ha seleccionado mes, ponemos el actual y el año
 $month = isset( $_GET[ 'month' ] ) ? $_GET[ 'month' ] : date( 'Y-n' );
+$operacion = isset( $_GET[ 'operacion' ] ) ? $_GET[ 'operacion' ] : 0;
 $week = 1;
+$a = substr($month,0,4);
+$m = substr($month,5);
+$month = $a.'-'.($m + $operacion);
 for ( $i=1;$i<=date( 't', strtotime( $month ) );$i++ ) {
 	$day_week = date( 'N', strtotime( $month.'-'.$i )  );
 	$calendar[ $week ][ $day_week ] = $i;
@@ -29,28 +33,19 @@ for ( $i=1;$i<=date( 't', strtotime( $month ) );$i++ ) {
 			var f=new Date();
 			$(document).ready(function(){
 				$("#lastmonth").on("click", function(){ 
-					//lastMonth();
-					if(f.getMonth()==01){
-						if(f.getDay()>=28){
-							f.setDay(28);
-						}
-					}
-					f.setMonth(f.getMonth()-1);
-					console.log(f.getFullYear()+'-'+(f.getMonth()));
-					$('#month').val(f.getFullYear()+'-'+f.getMonth());
-					alert(f);
+					//f.setMonth(f.getMonth()-1);
+					//console.log(f.getFullYear()+'-'+(f.getMonth()));
+					//$('#month').val(f.getFullYear()+'-'+f.getMonth());
+					$("#operacion").val(-1);
+					$('#mes').submit();
 				});
+				
 				$("#nextmonth").on("click", function(){ 
-					//nextMonth();
-					if(f.getMonth()==01){
-						if(f.getDay()>=28){
-							f.setDay(28);
-						}
-					}
-					f.setMonth(f.getMonth()+1);
-					console.log(f.getFullYear()+'-'+(f.getMonth()));
-					$('#month').val(f.getFullYear()+'-'+f.getMonth());
-					alert(f);
+					//f.setMonth(f.getMonth()+1);
+					//console.log(f.getFullYear()+'-'+(f.getMonth()));
+					//$('#month').val(f.getFullYear()+'-'+f.getMonth());
+					$("#operacion").val(+1);
+					$('#mes').submit();
 				});
 			});
 		</script>
@@ -85,8 +80,9 @@ for ( $i=1;$i<=date( 't', strtotime( $month ) );$i++ ) {
 			<tfoot>
 				<tr>
 					<td colspan="7">
-						<form method="get">
-							<input type="month" name="month" id="month" >
+						<form method="get" id="mes">
+							<input type="text" name="month" id="month" value="<?php echo $month; ?>">
+							<input type="text" name="operacion" id="operacion">
 							<input type="button" id="lastmonth">
 							<input type="button" id="nextmonth">
 						</form>
