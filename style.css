@@ -1,0 +1,17 @@
+.dayselected{
+	;color: black;
+	background-color: #87CEEB;
+}
+.day{
+	;color: white;
+	background-color:  	#FFFFFF;
+}
+
+td:hover{
+	background-color: #808080;
+}
+
+td div{
+	width: 40px;
+	height: 40px;
+}
