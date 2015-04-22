@@ -6,6 +6,8 @@ Calendario muy básico desarrollado sobre PHP y HTML5, que nos muestra el mes ac
 Más información
 ---------------
 
+-- calendariocursos
+
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
