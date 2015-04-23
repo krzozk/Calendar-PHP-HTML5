@@ -98,14 +98,14 @@ class Curso
 	} //Termina funcion obtenerCursos();
 	
 	
-	public function registrarPersonas($nombre,$apellido,$edad){
+	public function registrarCurso($nombre){
         $registrar = false; //creamos una variable de control
-		$consulta = "INSERT INTO cursos
+		$consulta = "INSERT INTO cursos(nombre,creado)
 					VALUES (:nombre, :creado)";
 		
 		//VALORES PARA REGISTRO
 		$valores = array("nombre"=>$nombre,
-						"creado"=>new Date());
+						"creado"=>date('Y-m-d'));
 		
 		$oConexion = new conectorDB; //instanciamos conector
 		$registrar = $oConexion->consultarBD($consulta, $valores);

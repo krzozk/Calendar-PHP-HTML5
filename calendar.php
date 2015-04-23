@@ -30,8 +30,8 @@ for ( $i=1;$i<=date( 't', strtotime( $month ) );$i++ ) {
 //requerimos solo la clase consultas
 require_once("class/class.consultas.php");
 /* Para consultar Personas */
-//$oDatosPersonas = new Persona;
-//$personas_registradas = $oDatosPersonas->obtenerPersonas();
+$oDatosPersonas = new Persona;
+$personas_registradas = $oDatosPersonas->obtenerPersonas();
 //print_r($personas_registradas);
 /* Para registrar Personas */
 //$oRegistroPersonas = new Persona;
@@ -39,8 +39,8 @@ require_once("class/class.consultas.php");
 //if($registro){ echo "Registro Satisfactorio"; }
 
 
-
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 	<head>
@@ -66,10 +66,13 @@ require_once("class/class.consultas.php");
 		</style>
 		
 		<script>
+			var personas = <?php echo json_encode($personas_registradas); ?> ;
 			var f=new Date();
+			var numdaysselected = 0;
 			$(document).ready(function(){
 				$("#lastmonth").on("click", function(){ 
 					$("#operacion").val(-1);
+					numdaysselected--;
 					$('#mes').submit();
 				});
 				$("#today").on("click", function(){ 
@@ -78,19 +81,23 @@ require_once("class/class.consultas.php");
 				});
 				$("#nextmonth").on("click", function(){ 
 					$("#operacion").val(+1);
+					numdaysselected++;
 					$('#mes').submit();
 				});
 				
 				$("#cursofechas").on("click", function(){ 
-					$("#operacion").val(+1);
-					$('#mes').submit();
+					
 				});
 				
 				$('[data-daydiv="daydiv"]').on("click", function(){ 
 					var className = $(this).attr('class');
-					alert(className);
 					if(className == '' || className == null){
 						$( this ).addClass( "dayselected" );
+						var msg = "";
+						msg = "<div data-id>"+ 
+							""
+							+"</div>";
+						$("#thanks").html(msg);
 					}else{
 						$( this ).removeClass( "dayselected" );
 					}
@@ -100,7 +107,7 @@ require_once("class/class.consultas.php");
 			});
 			
 			$(function() {
-			//twitter bootstrap script
+				//twitter bootstrap script
 				$("button#submitusuario").click(function(){
 					$.ajax({
 						type: "POST",
@@ -110,6 +117,21 @@ require_once("class/class.consultas.php");
 							$("#thanks").html(msg);
 							$('form.usuario')[0].reset();
 							$("#form-content").modal('hide');
+						},
+						error: function(){
+							alert("failure");
+						}
+					});
+				});
+				$("button#submitcurso").click(function(){
+					$.ajax({
+						type: "POST",
+						url: "crearcurso.php",
+						data: $('form.curso').serialize(),
+						success: function(msg){
+							$("#thanks").html(msg);
+							$('form.curso')[0].reset();
+							$("#form-curso").modal('hide');
 						},
 						error: function(){
 							alert("failure");
@@ -126,16 +148,30 @@ require_once("class/class.consultas.php");
 		<a class="dropdown-toggle"
 		   data-toggle="dropdown"
 		   href="#">
-			Usuario
+			Operaciones
 			<b class="caret"></b>
 		  </a>
 		<ul class="dropdown-menu">
 		  <!-- links -->
 		  <a data-toggle="modal" href="#form-content" >Registrar Usuario</a>
+		  <a data-toggle="modal" href="#form-curso" >Registrar Curso</a>
 		</ul>
 	  </li>
 	</ul>
-	<div class="container">
+	
+	<div class="usuarios">
+		<ul>
+		<?php 
+			foreach($personas_registradas as $clave => $valor){
+				echo '<li data-id='.$valor['id'].'>'.
+					$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno']
+				.'</li>';
+			}
+		?>
+		</ul>
+		Color: <input name="color" type="color" value="#f3f3f3"/>
+		
+	</div>
 		<div id="thanks"></div>
 		<table border="1">
 			<thead>
@@ -177,8 +213,7 @@ require_once("class/class.consultas.php");
 			</tbody>
 		</table>
 
-		<div class="container">
-
+	<div class="container">
 		<!-- model content -->	
 		<div id="form-content" class="modal hide fade in" style="display: none; ">
 			<div class="modal-header">
@@ -207,5 +242,32 @@ require_once("class/class.consultas.php");
 			</div>
 		</div>
 	</div>
+	
+	<div class="container">
+		<!-- model content -->	
+		<div id="form-curso" class="modal hide fade in" style="display: none; ">
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal">×</a>
+				<h3>Registrar Curso</h3>
+			</div>
+			<div>
+				<form class="curso" >
+					<fieldset>
+						<div class="modal-body">
+							<ul class="nav nav-list">
+								<li class="nav-header">Nombre</li>
+								<li><input class="input-xlarge" value="" type="text" name="nombre" value=""></li>
+							</ul> 
+						</div>
+					</fieldset>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-success" id="submitcurso">Guardar</button>
+				<a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+			</div>
+		</div>
+	</div>
+	
 	</body>
 </html>
