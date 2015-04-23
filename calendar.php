@@ -32,6 +32,8 @@ require_once("class/class.consultas.php");
 /* Para consultar Personas */
 $oDatosPersonas = new Persona;
 $personas_registradas = $oDatosPersonas->obtenerPersonas();
+$oDatosCursos = new Curso;
+$cursos_registrados = $oDatosCursos->obtenerCursos();
 //print_r($personas_registradas);
 /* Para registrar Personas */
 //$oRegistroPersonas = new Persona;
@@ -52,6 +54,10 @@ $personas_registradas = $oDatosPersonas->obtenerPersonas();
 		
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 		<link href="http://www.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet" media="screen"> 
+		
+		<link rel="icon" type="image/png" href="favicon.ico" />
+		
+		
 		<!-- librerías opcionales que activan el soporte de HTML5 para IE8 -->
 		<!--[if lt IE 9]>
 		  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -86,7 +92,20 @@ $personas_registradas = $oDatosPersonas->obtenerPersonas();
 				});
 				
 				$("#cursofechas").on("click", function(){ 
-					
+					$.ajax({
+						type: "POST",
+						url: "crearcursofechas.php",
+						data: $('form.cursofecha').serialize(),
+						success: function(msg){
+							$("#thanks").html(msg);
+							$('form.cursofecha')[0].reset();
+							$("#form-content").modal('hide');
+						},
+						error: function(){
+							alert("failure");
+						}
+					});
+					//$('#cursofecha').submit();
 				});
 				
 				$('[data-daydiv="daydiv"]').on("click", function(){ 
@@ -103,6 +122,18 @@ $personas_registradas = $oDatosPersonas->obtenerPersonas();
 					}
 					
 				});
+				
+				/*
+				$('.usuarios ul li').on("click", function(){ 
+					console.log('click');
+					var className = $(this).attr('class');
+					if(className == '' || className == null){
+						$( this ).addClass( "check" );
+					}else{
+						$( this ).removeClass( "check" );
+					}
+					
+				});*/
 
 			});
 			
@@ -145,12 +176,7 @@ $personas_registradas = $oDatosPersonas->obtenerPersonas();
 	<body>
 	<ul class="nav nav-pills">
 	  <li class="dropdown">
-		<a class="dropdown-toggle"
-		   data-toggle="dropdown"
-		   href="#">
-			Operaciones
-			<b class="caret"></b>
-		  </a>
+		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Operaciones<b class="caret"></b></a>
 		<ul class="dropdown-menu">
 		  <!-- links -->
 		  <a data-toggle="modal" href="#form-content" >Registrar Usuario</a>
@@ -158,20 +184,33 @@ $personas_registradas = $oDatosPersonas->obtenerPersonas();
 		</ul>
 	  </li>
 	</ul>
-	
-	<div class="usuarios">
-		<ul>
-		<?php 
-			foreach($personas_registradas as $clave => $valor){
-				echo '<li data-id='.$valor['id'].'>'.
-					$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno']
-				.'</li>';
-			}
-		?>
-		</ul>
-		Color: <input name="color" type="color" value="#f3f3f3"/>
-		
-	</div>
+
+	<form method="post" id="cursofecha" name="cursofecha" class="cursofecha" >
+		Color: <input name="color" type="color" value="#f3f3f3" />
+		<div class="cursos">
+			<select name="curso">
+				<?php 
+					foreach($cursos_registrados as $clave => $valor){
+						echo '<option value='.$valor['id'].' data-id='.$valor['id'].'>'.
+							$valor['nombre']
+						.'</option>';
+					}
+				?>
+			</select> 
+		</div>
+		<div class="usuarios">
+			<ul>
+			<?php 
+				foreach($personas_registradas as $clave => $valor){
+					echo '<li data-id='.$valor['id'].'>'.
+						$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno']
+					.'</li>';
+				}
+			?>
+			</ul>
+			
+		</div>
+	</form>
 		<div id="thanks"></div>
 		<table border="1">
 			<thead>

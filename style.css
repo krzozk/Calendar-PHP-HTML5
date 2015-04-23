@@ -15,3 +15,16 @@ td div{
 	width: 60px;
 	height: 40px;
 }
+
+.usuarios>ul{
+	list-style:none;
+}
+	   
+.usuarios>ul>li{
+	cursor: pointer;
+}
+
+.check{
+	background-image: url("check.png");
+	background-repeat: no-repeat;
+}
