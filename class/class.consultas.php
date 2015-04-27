@@ -172,6 +172,16 @@ class Fechas{
 		$this->cursos = $oConectar->consultarBD($consulta,$valores);
 		return $this->cursos;
 	} //Termina funcion obtenerFechasPorIdCurso();
+	public function obtenerFechasPorFecha($fecha){
+		$consulta = "SELECT f.id fid, f.fecha, cf.id curso_fechas_id, cf.curso_id, cf.nombre, cf.color
+					FROM fechas f
+					INNER JOIN curso_fechas cf ON cf.id = f.curso_fechas_id
+					WHERE f.fecha = '".$fecha."' ";
+		$valores = null;
+		$oConectar = new conectorDB; //instanciamos conector
+		$this->cursos = $oConectar->consultarBD($consulta,$valores);
+		return $this->cursos;
+	} //Termina funcion obtenerFechasPorFecha();
 	public function registarFechaCurso($curso_fechas_id,$fecha,$oConection){
 		$query = "INSERT INTO fechas(curso_fechas_id,fecha)
 					VALUES (:curso_fechas_id, :fecha)";

@@ -2,18 +2,19 @@
 	;color: black;
 	background-color: #87CEEB;
 }
-.day{
-	;color: white;
-	background-color:  	#FFFFFF;
-}
 
-td:hover{
+td.alta:hover{
 	background-color: #808080;
 }
 
 td div{
 	width: 60px;
 	height: 40px;
+}
+
+.cursoregistrado{
+	width: 60px;
+	height: 10px;
 }
 
 .usuarios>ul{

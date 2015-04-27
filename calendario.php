@@ -52,6 +52,7 @@ $oDatosCursosFecha = new CursoFecha;
 $cursosfecha_registrados = $oDatosCursosFecha->obtenerCursosFecha();
 $cfr = array();
 //var_dump($cursosfecha_registrados);
+/*
 foreach($cursosfecha_registrados as $clave => $valor){
 	if($valor!=0){
 		$oDatosFechas = new Fechas;
@@ -77,6 +78,7 @@ foreach($cursosfecha_registrados as $clave => $valor){
 		array_push($cfr,$cursosfecha_registrados[$clave]);
 	}
 }
+*/
 //var_dump($cfr);
 ?>
 
@@ -153,41 +155,6 @@ foreach($cursosfecha_registrados as $clave => $valor){
 					//$('#cursofecha').submit();
 				});
 				
-				$('[data-daydiv="daydiv"]').on("click", function(){
-					var className = $(this).attr('class');
-					if(className == '' || className == null){
-						$( this ).addClass( "dayselected" );
-						var msg = "";
-						msg = "<div data-id>"+ 
-							""
-							+"</div>";
-						$("#thanks").html(msg);
-						fechas.push( $(this).data("fecha") );
-						fechas.sort(function(a,b){
-										var c = new Date(a);
-										var d = new Date(b);
-										return c-d;
-									});
-						$("#ffechas").val(fechas);
-					}else{
-						$( this ).removeClass( "dayselected" );
-						fechas.splice( fechas.indexOf( $(this).data("fecha") ), 1 );
-						$("#ffechas").val(fechas);
-					}
-				});
-				
-				/*
-				$('.usuarios ul li').on("click", function(){ 
-					console.log('click');
-					var className = $(this).attr('class');
-					if(className == '' || className == null){
-						$( this ).addClass( "check" );
-					}else{
-						$( this ).removeClass( "check" );
-					}
-					
-				});*/
-
 			});
 			
 			$(function() {
@@ -244,7 +211,7 @@ foreach($cursosfecha_registrados as $clave => $valor){
 		<div class="cursos">
 			<select name="curso">
 				<?php 
-					foreach($cursos_registrados as $clave => $valor){
+					foreach($cr as $clave => $valor){
 						echo '<option value='.$valor['id'].' data-id='.$valor['id'].'>'.
 							$valor['nombre']
 						.'</option>';
@@ -300,8 +267,22 @@ foreach($cursosfecha_registrados as $clave => $valor){
 						<?php for ( $i=1;$i<=7;$i++ ) : ?>
 							<td>
 								<?php echo isset( $days[ $i ] ) ? $days[ $i ] : ''; ?>
-								<div data-daydiv="daydiv" data-fecha="<?php echo strftime( '%Y-%m-', strtotime( $month ) ).(isset( $days[ $i ] ) ? (($days[ $i ]>0&&$days[ $i ]<10)?('0'.$days[ $i ]):$days[ $i ]) : ''); ?>">
-								</div>
+								<?php $fechadia = strftime( '%Y-%m-', strtotime( $month ) ).(isset( $days[ $i ] ) ? (($days[ $i ]>0&&$days[ $i ]<10)?('0'.$days[ $i ]):$days[ $i ]) : ''); ?>
+								<?php
+									
+									$oDatosFechas = new Fechas;
+									$fechas_registradas = $oDatosFechas->obtenerFechasPorFecha($fechadia);
+									$fraux = array();
+									foreach($fechas_registradas as $frc => $frv){
+										if($frv!=0){
+											array_push($fraux,$fechas_registradas[$frc]);
+										}
+									}
+									foreach($fraux as $fc => $fv){
+										echo '<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].';" class="cursoregistrado" >
+											</div>';
+									}
+								?>
 							</td>
 						<?php endfor; ?>
 					</tr>
