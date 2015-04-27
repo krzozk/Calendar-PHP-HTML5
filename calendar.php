@@ -32,15 +32,52 @@ require_once("class/class.consultas.php");
 /* Para consultar Personas */
 $oDatosPersonas = new Persona;
 $personas_registradas = $oDatosPersonas->obtenerPersonas();
+$pr = array();
+foreach($personas_registradas as $clave => $valor){
+	if($valor!=0){
+		array_push($pr,$personas_registradas[$clave]);
+	}
+}
+/* Para consultar Cursos */
 $oDatosCursos = new Curso;
 $cursos_registrados = $oDatosCursos->obtenerCursos();
-//print_r($personas_registradas);
-/* Para registrar Personas */
-//$oRegistroPersonas = new Persona;
-//$registro = $oRegistroPersonas->registrarPersonas("Irma","Arias",30);
-//if($registro){ echo "Registro Satisfactorio"; }
-
-
+$cr = array();
+foreach($cursos_registrados as $clave => $valor){
+	if($valor!=0){
+		array_push($cr,$cursos_registrados[$clave]);
+	}
+}
+/* Para consultar Curso agendado y sus participantes */
+$oDatosCursosFecha = new CursoFecha;
+$cursosfecha_registrados = $oDatosCursosFecha->obtenerCursosFecha();
+$cfr = array();
+//var_dump($cursosfecha_registrados);
+foreach($cursosfecha_registrados as $clave => $valor){
+	if($valor!=0){
+		$oDatosFechas = new Fechas;
+		$fechas_registradas = $oDatosFechas->obtenerFechasPorIdCursoFecha($cursosfecha_registrados[$clave]['id']);
+		$fraux = array();
+		foreach($fechas_registradas as $frc => $frv){
+			if($frv!=0){
+				array_push($fraux,$fechas_registradas[$frc]);
+			}
+		}
+		$cursosfecha_registrados[$clave]['fechas'] = $fraux;
+		//var_dump($fechas_registradas);
+		$oDatosCursoPersonas = new CursoPersona;
+		$personas_registradas = $oDatosCursoPersonas->obtenerPersonasPorIdCursoFecha($cursosfecha_registrados[$clave]['id']);
+		$praux = array();
+		foreach($personas_registradas as $prc => $prv){
+			if($prv!=0){
+				array_push($praux,$personas_registradas[$prc]);
+			}
+		}
+		//var_dump($personas_registradas);
+		$cursosfecha_registrados[$clave]['personas'] = $praux;
+		array_push($cfr,$cursosfecha_registrados[$clave]);
+	}
+}
+//var_dump($cfr);
 ?>
 
 <!DOCTYPE html>
@@ -72,8 +109,9 @@ $cursos_registrados = $oDatosCursos->obtenerCursos();
 		</style>
 		
 		<script>
-			var personas = <?php echo json_encode($personas_registradas); ?> ;
+			var personas = <?php echo json_encode($pr); ?> ;
 			var f=new Date();
+			var fechas = new Array();
 			var numdaysselected = 0;
 			$(document).ready(function(){
 				$("#lastmonth").on("click", function(){ 
@@ -91,11 +129,17 @@ $cursos_registrados = $oDatosCursos->obtenerCursos();
 					$('#mes').submit();
 				});
 				
-				$("#cursofechas").on("click", function(){ 
+				$("#cursofechas").on("click", function(){
+					$("#fusuarios").val(personas);
+					var p = new Array();
+					for(i=0; i < personas.length; i++){
+						p.push($("#participantes"+i).data("id")+'-'+$("#participantes"+i).val());
+					}
+					
 					$.ajax({
 						type: "POST",
 						url: "crearcursofechas.php",
-						data: $('form.cursofecha').serialize(),
+						data: $('form.cursofecha').serialize()+'&fusuarios='+p,
 						success: function(msg){
 							$("#thanks").html(msg);
 							$('form.cursofecha')[0].reset();
@@ -105,10 +149,11 @@ $cursos_registrados = $oDatosCursos->obtenerCursos();
 							alert("failure");
 						}
 					});
+					
 					//$('#cursofecha').submit();
 				});
 				
-				$('[data-daydiv="daydiv"]').on("click", function(){ 
+				$('[data-daydiv="daydiv"]').on("click", function(){
 					var className = $(this).attr('class');
 					if(className == '' || className == null){
 						$( this ).addClass( "dayselected" );
@@ -117,10 +162,18 @@ $cursos_registrados = $oDatosCursos->obtenerCursos();
 							""
 							+"</div>";
 						$("#thanks").html(msg);
+						fechas.push( $(this).data("fecha") );
+						fechas.sort(function(a,b){
+										var c = new Date(a);
+										var d = new Date(b);
+										return c-d;
+									});
+						$("#ffechas").val(fechas);
 					}else{
 						$( this ).removeClass( "dayselected" );
+						fechas.splice( fechas.indexOf( $(this).data("fecha") ), 1 );
+						$("#ffechas").val(fechas);
 					}
-					
 				});
 				
 				/*
@@ -186,6 +239,7 @@ $cursos_registrados = $oDatosCursos->obtenerCursos();
 	</ul>
 
 	<form method="post" id="cursofecha" name="cursofecha" class="cursofecha" >
+		<input name="ffechas" id="ffechas" type="hidden" >
 		Color: <input name="color" type="color" value="#f3f3f3" />
 		<div class="cursos">
 			<select name="curso">
@@ -201,10 +255,13 @@ $cursos_registrados = $oDatosCursos->obtenerCursos();
 		<div class="usuarios">
 			<ul>
 			<?php 
-				foreach($personas_registradas as $clave => $valor){
+				$i= 0;
+				foreach($pr as $clave => $valor){
 					echo '<li data-id='.$valor['id'].'>'.
 						$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno']
 					.'</li>';
+					echo '<input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].'>';
+					$i++;
 				}
 			?>
 			</ul>
@@ -243,7 +300,7 @@ $cursos_registrados = $oDatosCursos->obtenerCursos();
 						<?php for ( $i=1;$i<=7;$i++ ) : ?>
 							<td>
 								<?php echo isset( $days[ $i ] ) ? $days[ $i ] : ''; ?>
-								<div data-daydiv="daydiv">
+								<div data-daydiv="daydiv" data-fecha="<?php echo strftime( '%Y-%m-', strtotime( $month ) ).(isset( $days[ $i ] ) ? (($days[ $i ]>0&&$days[ $i ]<10)?('0'.$days[ $i ]):$days[ $i ]) : ''); ?>">
 								</div>
 							</td>
 						<?php endfor; ?>
