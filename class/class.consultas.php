@@ -56,6 +56,13 @@ class Persona
 		$this->personas = $oConectar->consultarBD($consulta,$valores);
 		return $this->personas;
 	} //Termina funcion obtenerPersonas();
+	public function obtenerPersonasPorId($persona){
+		$consulta = "SELECT * FROM personas WHERE id = ".$persona;
+		$valores = null;
+		$oConectar = new conectorDB; //instanciamos conector
+		$this->personas = $oConectar->consultarBD($consulta,$valores);
+		return $this->personas;
+	} //Termina funcion obtenerPersonasPorId();
 	public function registrarPersonas($nombre,$apellidoPaterno,$apellidoMaterno){
         $registrar = false; //creamos una variable de control
 		$consulta = "INSERT INTO personas(nombre,apellido_paterno,apellido_materno)
@@ -216,6 +223,17 @@ class CursoPersona{
 		$values = array("curso_fechas_id"=>$curso_fechas_id,
 						"persona_id"=>$personaId,
 						"participantes"=>$participantes,
+						);
+		$result = $oConection->consultarBD($query, $values);
+		return $result;
+	}
+	public function actualizarParticipantes($id,$participantes){
+		$oConection = new conectorDB; //instanciamos conector
+		$query = "UPDATE curso_persona SET participantes = :participantes
+					WHERE id = :id ";
+		//VALORES PARA REGISTRO
+		$values = array("participantes"=>$participantes,
+						"id"=>$id
 						);
 		$result = $oConection->consultarBD($query, $values);
 		return $result;

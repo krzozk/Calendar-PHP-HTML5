@@ -51,35 +51,7 @@ foreach($cursos_registrados as $clave => $valor){
 $oDatosCursosFecha = new CursoFecha;
 $cursosfecha_registrados = $oDatosCursosFecha->obtenerCursosFecha();
 $cfr = array();
-//var_dump($cursosfecha_registrados);
-/*
-foreach($cursosfecha_registrados as $clave => $valor){
-	if($valor!=0){
-		$oDatosFechas = new Fechas;
-		$fechas_registradas = $oDatosFechas->obtenerFechasPorIdCursoFecha($cursosfecha_registrados[$clave]['id']);
-		$fraux = array();
-		foreach($fechas_registradas as $frc => $frv){
-			if($frv!=0){
-				array_push($fraux,$fechas_registradas[$frc]);
-			}
-		}
-		$cursosfecha_registrados[$clave]['fechas'] = $fraux;
-		//var_dump($fechas_registradas);
-		$oDatosCursoPersonas = new CursoPersona;
-		$personas_registradas = $oDatosCursoPersonas->obtenerPersonasPorIdCursoFecha($cursosfecha_registrados[$clave]['id']);
-		$praux = array();
-		foreach($personas_registradas as $prc => $prv){
-			if($prv!=0){
-				array_push($praux,$personas_registradas[$prc]);
-			}
-		}
-		//var_dump($personas_registradas);
-		$cursosfecha_registrados[$clave]['personas'] = $praux;
-		array_push($cfr,$cursosfecha_registrados[$clave]);
-	}
-}
-*/
-//var_dump($cfr);
+
 ?>
 
 <!DOCTYPE html>
@@ -115,6 +87,16 @@ foreach($cursosfecha_registrados as $clave => $valor){
 			var f=new Date();
 			var fechas = new Array();
 			var numdaysselected = 0;
+			
+			function justNumbers(e)
+			{
+				var keynum = window.event ? window.event.keyCode : e.which;
+				if ((keynum == 8) || (keynum == 46))
+					return true;
+				 
+				return /\d/.test(String.fromCharCode(keynum));
+			}
+			
 			$(document).ready(function(){
 				$("#lastmonth").on("click", function(){ 
 					$("#operacion").val(-1);
@@ -131,110 +113,41 @@ foreach($cursosfecha_registrados as $clave => $valor){
 					$('#mes').submit();
 				});
 				
-				$("#cursofechas").on("click", function(){
-					$("#fusuarios").val(personas);
-					var p = new Array();
-					for(i=0; i < personas.length; i++){
-						p.push($("#participantes"+i).data("id")+'-'+$("#participantes"+i).val());
-					}
+				$(".cursoregistrado").on("click", function(){
+					var msg = '<form method="post" id="participantes" name="participantes" class="cursofecha" >';
+					msg += '<input type="text" style="background-color:'+$(this).data("color")+'; width:20px; height:10px; " name="colorcourse" readonly disabled >'
+					msg += $(this).data("nombre");
+					msg += '<input type="hidden" value="'+$(this).data("cursofechasid")+'" name="cursofechasid">'
+					msg += '<input type="hidden" value="'+$(this).data("color")+'" name="color">'
+					msg += '<input type="hidden" value="'+$(this).data("cursoid")+'" name="cursoid">'
+					msg += '<div id="usuarios"></div>';
+					//msg += '<button class="btn btn-primary" id="cursofechas" >Actualizar</button>'
+					msg += '</form>';
+					$("#actualizaparticipantes").html(msg);
 					
 					$.ajax({
 						type: "POST",
-						url: "crearcursofechas.php",
-						data: $('form.cursofecha').serialize()+'&fusuarios='+p,
-						success: function(msg){
-							$("#thanks").html(msg);
-							$('form.cursofecha')[0].reset();
-							$("#form-content").modal('hide');
+						url: "obtenerparticipantes.php",
+						data: {cursofechasid:$(this).data("cursofechasid")},
+						success: function(response){
+							//alert(response);
+							$("#usuarios").html(response);
+							msg += response;
+							//$('form.participantes')[0].reset();
 						},
 						error: function(){
 							alert("failure");
 						}
 					});
 					
-					//$('#cursofecha').submit();
 				});
 				
 			});
-			
-			$(function() {
-				//twitter bootstrap script
-				$("button#submitusuario").click(function(){
-					$.ajax({
-						type: "POST",
-						url: "process.php",
-						data: $('form.usuario').serialize(),
-						success: function(msg){
-							$("#thanks").html(msg);
-							$('form.usuario')[0].reset();
-							$("#form-content").modal('hide');
-						},
-						error: function(){
-							alert("failure");
-						}
-					});
-				});
-				$("button#submitcurso").click(function(){
-					$.ajax({
-						type: "POST",
-						url: "crearcurso.php",
-						data: $('form.curso').serialize(),
-						success: function(msg){
-							$("#thanks").html(msg);
-							$('form.curso')[0].reset();
-							$("#form-curso").modal('hide');
-						},
-						error: function(){
-							alert("failure");
-						}
-					});
-				});
-			});
-
 		</script>
 	</head>
 	<body>
-	<ul class="nav nav-pills">
-	  <li class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Operaciones<b class="caret"></b></a>
-		<ul class="dropdown-menu">
-		  <!-- links -->
-		  <a data-toggle="modal" href="#form-content" >Registrar Usuario</a>
-		  <a data-toggle="modal" href="#form-curso" >Registrar Curso</a>
-		</ul>
-	  </li>
-	</ul>
-
-	<form method="post" id="cursofecha" name="cursofecha" class="cursofecha" >
-		<input name="ffechas" id="ffechas" type="hidden" >
-		Color: <input name="color" type="color" value="#f3f3f3" />
-		<div class="cursos">
-			<select name="curso">
-				<?php 
-					foreach($cr as $clave => $valor){
-						echo '<option value='.$valor['id'].' data-id='.$valor['id'].'>'.
-							$valor['nombre']
-						.'</option>';
-					}
-				?>
-			</select> 
-		</div>
-		<div class="usuarios">
-			<ul>
-			<?php 
-				$i= 0;
-				foreach($pr as $clave => $valor){
-					echo '<li data-id='.$valor['id'].'>'.
-						$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno']
-					.'</li>';
-					echo '<input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].'>';
-					$i++;
-				}
-			?>
-			</ul>
-			
-		</div>
-	</form>
+	<div id="actualizaparticipantes" style="display:block;">
+	</div>
 		<div id="thanks"></div>
 		<table border="1">
 			<thead>
@@ -248,7 +161,6 @@ foreach($cursosfecha_registrados as $clave => $valor){
 							<input type="button" id="today" value="-">
 							<input type="button" id="nextmonth" value=">">
 						</form>
-						<button class="btn btn-primary" id="cursofechas" >Guardar</button>
 					</td>
 				</tr>
 				<tr>
@@ -269,7 +181,6 @@ foreach($cursosfecha_registrados as $clave => $valor){
 								<?php echo isset( $days[ $i ] ) ? $days[ $i ] : ''; ?>
 								<?php $fechadia = strftime( '%Y-%m-', strtotime( $month ) ).(isset( $days[ $i ] ) ? (($days[ $i ]>0&&$days[ $i ]<10)?('0'.$days[ $i ]):$days[ $i ]) : ''); ?>
 								<?php
-									
 									$oDatosFechas = new Fechas;
 									$fechas_registradas = $oDatosFechas->obtenerFechasPorFecha($fechadia);
 									$fraux = array();
@@ -289,62 +200,6 @@ foreach($cursosfecha_registrados as $clave => $valor){
 				<?php endforeach; ?>
 			</tbody>
 		</table>
-
-	<div class="container">
-		<!-- model content -->	
-		<div id="form-content" class="modal hide fade in" style="display: none; ">
-			<div class="modal-header">
-				<a class="close" data-dismiss="modal">×</a>
-				<h3>Registrar Usuario</h3>
-			</div>
-			<div>
-				<form class="usuario" >
-					<fieldset>
-						<div class="modal-body">
-							<ul class="nav nav-list">
-								<li class="nav-header">Nombre</li>
-								<li><input class="input-xlarge" value="" type="text" name="nombre" value=""></li>
-								<li class="nav-header">Apellido Paterno</li>
-								<li><input class="input-xlarge" value="" type="text" name="apellido_paterno" value=""></li>
-								<li class="nav-header">Apellido Materno</li>
-								<li><input class="input-xlarge" value="" type="text" name="apellido_materno" value=""></li>
-							</ul> 
-						</div>
-					</fieldset>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-success" id="submitusuario">Guardar</button>
-				<a href="#" class="btn" data-dismiss="modal">Cerrar</a>
-			</div>
-		</div>
-	</div>
-	
-	<div class="container">
-		<!-- model content -->	
-		<div id="form-curso" class="modal hide fade in" style="display: none; ">
-			<div class="modal-header">
-				<a class="close" data-dismiss="modal">×</a>
-				<h3>Registrar Curso</h3>
-			</div>
-			<div>
-				<form class="curso" >
-					<fieldset>
-						<div class="modal-body">
-							<ul class="nav nav-list">
-								<li class="nav-header">Nombre</li>
-								<li><input class="input-xlarge" value="" type="text" name="nombre" value=""></li>
-							</ul> 
-						</div>
-					</fieldset>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-success" id="submitcurso">Guardar</button>
-				<a href="#" class="btn" data-dismiss="modal">Cerrar</a>
-			</div>
-		</div>
-	</div>
 	
 	</body>
 </html>

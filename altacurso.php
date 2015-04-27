@@ -115,6 +115,16 @@ foreach($cursosfecha_registrados as $clave => $valor){
 			var f=new Date();
 			var fechas = new Array();
 			var numdaysselected = 0;
+			
+			function justNumbers(e)
+			{
+				var keynum = window.event ? window.event.keyCode : e.which;
+				if ((keynum == 8) || (keynum == 46))
+					return true;
+				 
+				return /\d/.test(String.fromCharCode(keynum));
+			}
+			
 			$(document).ready(function(){
 				$("#lastmonth").on("click", function(){ 
 					$("#operacion").val(-1);
@@ -262,7 +272,7 @@ foreach($cursosfecha_registrados as $clave => $valor){
 					echo '<li data-id='.$valor['id'].'>'.
 						$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno']
 					.'</li>';
-					echo '<input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].'>';
+					echo '<input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].' style=" width:35px; height:10px; pattern="[0-9]{2}" onkeypress="return justNumbers(event);" >';
 					$i++;
 				}
 			?>
