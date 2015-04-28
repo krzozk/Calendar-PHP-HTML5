@@ -91,19 +91,17 @@ foreach($cursosfecha_registrados as $clave => $valor){
 		
 		<title>Calendario de Cursos</title>
 		
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-		<link href="http://www.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet" media="screen"> 
+		<script src="jquery.js"></script>
+		<link href="bootstrap-combined.min.css" rel="stylesheet" media="screen"> 
 		
 		<link rel="icon" type="image/png" href="favicon.ico" />
 		
-		
 		<!-- librerías opcionales que activan el soporte de HTML5 para IE8 -->
 		<!--[if lt IE 9]>
-		  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-		  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		  <script src="html5shiv.js"></script>
+		  <script src="respond.min.js"></script>
 		<![endif]-->
-		<script src="http://www.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
-
+		<script src="bootstrap.min.js"></script>
 		
 		<link rel="stylesheet" type="text/css" href="style.css" />
 		<style type="text/css">
@@ -238,160 +236,174 @@ foreach($cursosfecha_registrados as $clave => $valor){
 
 		</script>
 	</head>
-	<body>
-	<ul class="nav nav-pills">
-	  <li class="dropdown">
-		<a class="dropdown-toggle" data-toggle="dropdown" href="#">Operaciones<b class="caret"></b></a>
-		<ul class="dropdown-menu">
-		  <!-- links -->
-		  <a data-toggle="modal" href="#form-content" >Registrar Usuario</a>
-		  <a data-toggle="modal" href="#form-curso" >Registrar Curso</a>
-		</ul>
-	  </li>
-	</ul>
-
-	<form method="post" id="cursofecha" name="cursofecha" class="cursofecha" >
-		<input name="ffechas" id="ffechas" type="hidden" >
-		Color: <input name="color" type="color" value="#f3f3f3" />
-		<div class="cursos">
-			<select name="curso">
-				<?php 
-					foreach($cr as $clave => $valor){
-						echo '<option value='.$valor['id'].' data-id='.$valor['id'].'>'.
-							$valor['nombre']
-						.'</option>';
-					}
-				?>
-			</select> 
-		</div>
-		<div class="usuarios">
-			<ul>
-			<?php 
-				$i= 0;
-				foreach($pr as $clave => $valor){
-					echo '<li data-id='.$valor['id'].'>'.
-						$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno']
-					.'</li>';
-					echo '<input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].' style=" width:35px; height:10px; pattern="[0-9]{2}" onkeypress="return justNumbers(event);" >';
-					$i++;
-				}
-			?>
-			</ul>
-			
-		</div>
-	</form>
-		<div id="thanks"></div>
-		<table border="1">
-			<thead>
-				<tr>
-					<td colspan="7">
-						<?php echo ucwords( strftime( '%B %Y', strtotime( $month ) ) ); ?>
-						<form method="post" id="mes" style="display:inline;">
-							<input type="hidden" name="month" id="month" value="<?php echo $month; ?>">
-							<input type="hidden" name="operacion" id="operacion" >
-							<input type="button" id="lastmonth" value="<">
-							<input type="button" id="today" value="-">
-							<input type="button" id="nextmonth" value=">">
-						</form>
-						<button class="btn btn-primary" id="cursofechas" >Guardar</button>
-					</td>
-				</tr>
-				<tr>
-					<td>Lunes</td>
-					<td>Martes</td>			
-					<td>Miércoles</td>			
-					<td>Jueves</td>			
-					<td>Viernes</td>			
-					<td>Sábado</td>			
-					<td>Domingo</td>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ( $calendar as $days ) : ?>
-					<tr>
-						<?php for ( $i=1;$i<=7;$i++ ) : ?>
-							<td <?php echo isset( $days[ $i ] ) ? 'class="alta"' : ''; ?> >
-								<?php echo isset( $days[ $i ] ) ? $days[ $i ] : ''; ?>
-								<?php $fechadia = strftime( '%Y-%m-', strtotime( $month ) ).(isset( $days[ $i ] ) ? (($days[ $i ]>0&&$days[ $i ]<10)?('0'.$days[ $i ]):$days[ $i ]) : ''); ?>
-								<div data-daydiv="daydiv" data-fecha="<?php echo $fechadia; ?>">
-								</div>
-								<?php
-									/*
-									$oDatosFechas = new Fechas;
-									$fechas_registradas = $oDatosFechas->obtenerFechasPorFecha($fechadia);
-									$fraux = array();
-									foreach($fechas_registradas as $frc => $frv){
-										if($frv!=0){
-											array_push($fraux,$fechas_registradas[$frc]);
-										}
+	<body BGCOLOR="#f3f3f3">
+	<div class="container-fluid">
+		<div class="row-fluid espacioarriba">
+			<div class="span3">
+				<ul class="nav nav-pills">
+				  <li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="#">Operaciones<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+					  <!-- links -->
+					  <li><a data-toggle="modal" href="#form-content" >Registrar Usuario</a></li>
+					  <li><a data-toggle="modal" href="#form-curso" >Registrar Curso</a></li>
+					</ul>
+				  </li>
+				</ul>
+				<form method="post" id="cursofecha" name="cursofecha" class="cursofecha form-horizontal"  role="form" >
+					<input name="ffechas" id="ffechas" type="hidden" >
+					<div class="form-group espacio">
+						<label class="col-sm-1" for="color">Color:</label>
+						<div class="col-sm-2">
+							<input name="color" type="color" value="#f3f3f3" />
+						</div>
+					</div>
+					<div class="form-group espacio">
+						<label class="col-sm-1" for="color">Curso:</label>
+						<div class="col-sm-2">
+							<select name="curso">
+								<?php 
+									foreach($cr as $clave => $valor){
+										echo '<option value='.$valor['id'].' data-id='.$valor['id'].'>'.
+											$valor['nombre']
+										.'</option>';
 									}
-									foreach($fraux as $fc => $fv){
-										echo '<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; " >
-											</div>';
-									}*/
 								?>
+							</select>
+						</div>
+					</div>
+					<div class="usuarios espacio">
+							<ul>
+							<?php 
+								$i= 0;
+								foreach($pr as $clave => $valor){
+									echo '<li data-id='.$valor['id'].'>'.
+										'<p><input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].' style=" width:35px; height:10px; pattern="[0-9]{2}" onkeypress="return justNumbers(event);" >'.
+										' '.$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno'].'</p>'
+									.'</li>';
+									$i++;
+								}
+							?>
+							</ul>
+					</div>
+					<button class="btn btn-primary" id="cursofechas" >Guardar</button>
+					<br><br>
+					<a href="calendario.php" > Ir a Calendario de Usuarios </a>
+				</form>
+			</div>
+			<div class="span9">
+				<div id="thanks"></div>
+				<table border="1" style="width: 601px; height: 415px;" >
+					<thead>
+						<tr>
+							<td colspan="7">
+								<?php echo ucwords( strftime( '%B %Y', strtotime( $month ) ) ); ?>
+								<form method="post" id="mes" style="display:inline;">
+									<input type="hidden" name="month" id="month" value="<?php echo $month; ?>">
+									<input type="hidden" name="operacion" id="operacion" >
+									<input type="button" id="lastmonth" value="<">
+									<input type="button" id="today" value="-">
+									<input type="button" id="nextmonth" value=">">
+								</form>
 							</td>
-						<?php endfor; ?>
-					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
+						</tr>
+						<tr>
+							<td>Lunes</td>
+							<td>Martes</td>			
+							<td>Miércoles</td>			
+							<td>Jueves</td>			
+							<td>Viernes</td>			
+							<td>Sábado</td>			
+							<td>Domingo</td>
+						</tr>
+					</thead>
+					<tbody>
+						<?php foreach ( $calendar as $days ) : ?>
+							<tr>
+								<?php for ( $i=1;$i<=7;$i++ ) : ?>
+									<td <?php echo isset( $days[ $i ] ) ? 'class="alta"' : ''; ?> >
+										<?php echo isset( $days[ $i ] ) ? $days[ $i ] : ''; ?>
+										<?php $fechadia = strftime( '%Y-%m-', strtotime( $month ) ).(isset( $days[ $i ] ) ? (($days[ $i ]>0&&$days[ $i ]<10)?('0'.$days[ $i ]):$days[ $i ]) : ''); ?>
+										<div data-daydiv="daydiv" data-fecha="<?php echo $fechadia; ?>">
+										</div>
+										<?php
+											$oDatosFechas = new Fechas;
+											$fechas_registradas = $oDatosFechas->obtenerFechasPorFecha($fechadia);
+											$fraux = array();
+											foreach($fechas_registradas as $frc => $frv){
+												if($frv!=0){
+													array_push($fraux,$fechas_registradas[$frc]);
+												}
+											}
+											foreach($fraux as $fc => $fv){
+												echo '<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].';" class="cursoregistrado" >
+													</div>';
+											}
+										?>
+									</td>
+								<?php endfor; ?>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
 
-	<div class="container">
-		<!-- model content -->	
-		<div id="form-content" class="modal hide fade in" style="display: none; ">
-			<div class="modal-header">
-				<a class="close" data-dismiss="modal">×</a>
-				<h3>Registrar Usuario</h3>
-			</div>
-			<div>
-				<form class="usuario" >
-					<fieldset>
-						<div class="modal-body">
-							<ul class="nav nav-list">
-								<li class="nav-header">Nombre</li>
-								<li><input class="input-xlarge" value="" type="text" name="nombre" value=""></li>
-								<li class="nav-header">Apellido Paterno</li>
-								<li><input class="input-xlarge" value="" type="text" name="apellido_paterno" value=""></li>
-								<li class="nav-header">Apellido Materno</li>
-								<li><input class="input-xlarge" value="" type="text" name="apellido_materno" value=""></li>
-							</ul> 
+				<div class="container">
+					<!-- model content -->	
+					<div id="form-content" class="modal hide fade in" style="display: none; ">
+						<div class="modal-header">
+							<a class="close" data-dismiss="modal">×</a>
+							<h3>Registrar Usuario</h3>
 						</div>
-					</fieldset>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-success" id="submitusuario">Guardar</button>
-				<a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+						<div>
+							<form class="usuario" >
+								<fieldset>
+									<div class="modal-body">
+										<ul class="nav nav-list">
+											<li class="nav-header">Nombre</li>
+											<li><input class="input-xlarge" value="" type="text" name="nombre" value=""></li>
+											<li class="nav-header">Apellido Paterno</li>
+											<li><input class="input-xlarge" value="" type="text" name="apellido_paterno" value=""></li>
+											<li class="nav-header">Apellido Materno</li>
+											<li><input class="input-xlarge" value="" type="text" name="apellido_materno" value=""></li>
+										</ul> 
+									</div>
+								</fieldset>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-success" id="submitusuario">Guardar</button>
+							<a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+						</div>
+					</div>
+				</div>
+				
+				<div class="container">
+					<!-- model content -->	
+					<div id="form-curso" class="modal hide fade in" style="display: none; ">
+						<div class="modal-header">
+							<a class="close" data-dismiss="modal">×</a>
+							<h3>Registrar Curso</h3>
+						</div>
+						<div>
+							<form class="curso" >
+								<fieldset>
+									<div class="modal-body">
+										<ul class="nav nav-list">
+											<li class="nav-header">Nombre</li>
+											<li><input class="input-xlarge" value="" type="text" name="nombre" value=""></li>
+										</ul> 
+									</div>
+								</fieldset>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button class="btn btn-success" id="submitcurso">Guardar</button>
+							<a href="#" class="btn" data-dismiss="modal">Cerrar</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
-	
-	<div class="container">
-		<!-- model content -->	
-		<div id="form-curso" class="modal hide fade in" style="display: none; ">
-			<div class="modal-header">
-				<a class="close" data-dismiss="modal">×</a>
-				<h3>Registrar Curso</h3>
-			</div>
-			<div>
-				<form class="curso" >
-					<fieldset>
-						<div class="modal-body">
-							<ul class="nav nav-list">
-								<li class="nav-header">Nombre</li>
-								<li><input class="input-xlarge" value="" type="text" name="nombre" value=""></li>
-							</ul> 
-						</div>
-					</fieldset>
-				</form>
-			</div>
-			<div class="modal-footer">
-				<button class="btn btn-success" id="submitcurso">Guardar</button>
-				<a href="#" class="btn" data-dismiss="modal">Cerrar</a>
-			</div>
-		</div>
-	</div>
-	
 	</body>
 </html>

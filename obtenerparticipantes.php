@@ -22,9 +22,11 @@ if (isset($_POST['cursofechasid'])) {
 		}
 	}
 	if($praux){
+		echo '<ul>';
 		foreach($praux as $c => $v){
-			echo '<input class="target" pattern="[0-9]{2}" type="number" min="0" max="50" value="'.$v['participantes'].'" data-id="'.$v['id'].'" style=" width:35px; height:10px; " onkeypress="return justNumbers(event);" /> '.$v['personanombre'].' '.$v['personaapellidopaterno'].' '.$v['personaapellidomaterno'].'<br>';
+			echo '<li><p><input class="target" pattern="[0-9]{2}" type="number" min="0" max="50" value="'.$v['participantes'].'" data-id="'.$v['id'].'" style=" width:35px; height:10px; " onkeypress="return justNumbers(event);" /> '.$v['personanombre'].' '.$v['personaapellidopaterno'].' '.$v['personaapellidomaterno'].'</p></li>';
 		}
+		echo '</ul>';
 		echo '<script>
 				
 				$( ".target" ).change(function() {

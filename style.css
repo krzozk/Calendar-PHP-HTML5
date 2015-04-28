@@ -10,23 +10,41 @@ td.alta:hover{
 td div{
 	width: 60px;
 	height: 40px;
+	text-align: left; 
+	vertical-align:middle;
 }
 
+td{
+	text-align: left;
+	vertical-align:top;
+}
 .cursoregistrado{
-	width: 60px;
+	width: 100%;
 	height: 10px;
 	cursor: pointer;
+	text-align: left; 
+	line-height: 12px;
 }
 
 .usuarios>ul{
 	list-style:none;
-}
-	   
-.usuarios>ul>li{
-	cursor: pointer;
+	margin: 0 0 0 0;
 }
 
 .check{
 	background-image: url("check.png");
 	background-repeat: no-repeat;
+}
+
+.espacio{
+	margin-bottom: 10px;
+}
+
+.espacioarriba{
+	margin-top: 10px;
+}
+
+.usuarios>ul>li>p{
+	list-style:none;
+	margin: 0 0 2px;
 }

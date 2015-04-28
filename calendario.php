@@ -63,18 +63,18 @@ $cfr = array();
 		
 		<title>Calendario de Cursos</title>
 		
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-		<link href="http://www.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet" media="screen"> 
+		<script src="jquery.js"></script>
+		<link href="bootstrap-combined.min.css" rel="stylesheet" media="screen"> 
 		
 		<link rel="icon" type="image/png" href="favicon.ico" />
 		
 		
 		<!-- librerías opcionales que activan el soporte de HTML5 para IE8 -->
 		<!--[if lt IE 9]>
-		  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-		  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		  <script src="html5shiv.js"></script>
+		  <script src="respond.min.js"></script>
 		<![endif]-->
-		<script src="http://www.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+		<script src="bootstrap.min.js"></script>
 
 		
 		<link rel="stylesheet" type="text/css" href="style.css" />
@@ -114,13 +114,13 @@ $cfr = array();
 				});
 				
 				$(".cursoregistrado").on("click", function(){
-					var msg = '<form method="post" id="participantes" name="participantes" class="cursofecha" >';
-					msg += '<input type="text" style="background-color:'+$(this).data("color")+'; width:20px; height:10px; " name="colorcourse" readonly disabled >'
-					msg += $(this).data("nombre");
+					var msg = '<form method="post" id="participantes" name="participantes" class="cursofecha form-horizontal" role="form">';
+					msg += '<p><input type="text" style="background-color:'+$(this).data("color")+'; width:20px; height:10px; " name="colorcourse" readonly disabled >'
+					msg += '  '+$(this).data("nombre")+'</p>';
 					msg += '<input type="hidden" value="'+$(this).data("cursofechasid")+'" name="cursofechasid">'
 					msg += '<input type="hidden" value="'+$(this).data("color")+'" name="color">'
 					msg += '<input type="hidden" value="'+$(this).data("cursoid")+'" name="cursoid">'
-					msg += '<div id="usuarios"></div>';
+					msg += '<div id="usuarios" class="usuarios espacio"></div>';
 					//msg += '<button class="btn btn-primary" id="cursofechas" >Actualizar</button>'
 					msg += '</form>';
 					$("#actualizaparticipantes").html(msg);
@@ -145,61 +145,67 @@ $cfr = array();
 			});
 		</script>
 	</head>
-	<body>
-	<div id="actualizaparticipantes" style="display:block;">
-	</div>
-		<div id="thanks"></div>
-		<table border="1">
-			<thead>
-				<tr>
-					<td colspan="7">
-						<?php echo ucwords( strftime( '%B %Y', strtotime( $month ) ) ); ?>
-						<form method="post" id="mes" style="display:inline;">
-							<input type="hidden" name="month" id="month" value="<?php echo $month; ?>">
-							<input type="hidden" name="operacion" id="operacion" >
-							<input type="button" id="lastmonth" value="<">
-							<input type="button" id="today" value="-">
-							<input type="button" id="nextmonth" value=">">
-						</form>
-					</td>
-				</tr>
-				<tr>
-					<td>Lunes</td>
-					<td>Martes</td>			
-					<td>Miércoles</td>			
-					<td>Jueves</td>			
-					<td>Viernes</td>			
-					<td>Sábado</td>			
-					<td>Domingo</td>
-				</tr>
-			</thead>
-			<tbody>
-				<?php foreach ( $calendar as $days ) : ?>
-					<tr>
-						<?php for ( $i=1;$i<=7;$i++ ) : ?>
-							<td>
-								<?php echo isset( $days[ $i ] ) ? $days[ $i ] : ''; ?>
-								<?php $fechadia = strftime( '%Y-%m-', strtotime( $month ) ).(isset( $days[ $i ] ) ? (($days[ $i ]>0&&$days[ $i ]<10)?('0'.$days[ $i ]):$days[ $i ]) : ''); ?>
-								<?php
-									$oDatosFechas = new Fechas;
-									$fechas_registradas = $oDatosFechas->obtenerFechasPorFecha($fechadia);
-									$fraux = array();
-									foreach($fechas_registradas as $frc => $frv){
-										if($frv!=0){
-											array_push($fraux,$fechas_registradas[$frc]);
-										}
-									}
-									foreach($fraux as $fc => $fv){
-										echo '<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].';" class="cursoregistrado" >
-											</div>';
-									}
-								?>
-							</td>
-						<?php endfor; ?>
-					</tr>
-				<?php endforeach; ?>
-			</tbody>
-		</table>
-	
+	<body BGCOLOR="#f3f3f3">
+		<div class="container-fluid">
+			<div class="row-fluid espacioarriba">
+				<div class="span3">
+					<div id="actualizaparticipantes" style="display:block;"></div>
+				</div>
+				<div class="span9">
+					<div id="thanks"></div>
+					<table border="1" style="width: 601px; height: 415px;" >
+						<thead>
+							<tr style="height:26px;">
+								<td colspan="7">
+									<?php echo ucwords( strftime( '%B %Y', strtotime( $month ) ) ); ?>
+									<form method="post" id="mes" style="display:inline;">
+										<input type="hidden" name="month" id="month" value="<?php echo $month; ?>">
+										<input type="hidden" name="operacion" id="operacion" >
+										<input type="button" id="lastmonth" value="<">
+										<input type="button" id="today" value="-">
+										<input type="button" id="nextmonth" value=">">
+									</form>
+								</td>
+							</tr>
+							<tr style="height:26px;">
+								<td>Lunes</td>
+								<td>Martes</td>			
+								<td>Miércoles</td>			
+								<td>Jueves</td>			
+								<td>Viernes</td>			
+								<td>Sábado</td>			
+								<td>Domingo</td>
+							</tr>
+						</thead>
+						<tbody>
+							<?php foreach ( $calendar as $days ) : ?>
+								<tr>
+									<?php for ( $i=1;$i<=7;$i++ ) : ?>
+										<td valign="top">
+											<?php echo isset( $days[ $i ] ) ? $days[ $i ] : ''; ?>
+											<?php $fechadia = strftime( '%Y-%m-', strtotime( $month ) ).(isset( $days[ $i ] ) ? (($days[ $i ]>0&&$days[ $i ]<10)?('0'.$days[ $i ]):$days[ $i ]) : ''); ?>
+											<?php
+												$oDatosFechas = new Fechas;
+												$fechas_registradas = $oDatosFechas->obtenerFechasPorFecha($fechadia);
+												$fraux = array();
+												foreach($fechas_registradas as $frc => $frv){
+													if($frv!=0){
+														array_push($fraux,$fechas_registradas[$frc]);
+													}
+												}
+												foreach($fraux as $fc => $fv){
+													echo '<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; font-size:0.5em; " class="cursoregistrado" ><strong>'.$fv['nombre'].'
+														</strong></div>';
+												}
+											?>
+										</td>
+									<?php endfor; ?>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>
