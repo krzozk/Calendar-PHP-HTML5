@@ -375,11 +375,12 @@ foreach($cursosfecha_registrados as $clave => $valor){
 													<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; font-size:1.1em; " class="cursoregistrado" >
 														<div class="curso" data-fid="'.$fv['fid'].'">
 															<div class="nombrecurso" data-cursofechasid="'.$fv['curso_fechas_id'].'" >
+															<button type="button" class="pull-right cerrar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >&times;</button>
+																<button type="button" class="pull-right agregar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >+</button>
 																<strong>'.($participantes[0]['participantes']).'</strong> - '.
 																$fv['nombre'].'
+																
 															</div>
-															<div class="divagregar"><button type="button" class="pull-right agregar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >+</button></div>
-															<div class="divcerrar"><button type="button" class="pull-right cerrar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >&times;</button></div>
 														</div>
 													</div>
 													';
