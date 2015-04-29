@@ -228,6 +228,16 @@ class Fechas{
 		$result = $oConection->consultarBD($query, $values);
 		return $result;
 	}
+	public function agregarFechaACursoPorCursoFechaId($curso_fechas_id,$fecha){
+		$query = "INSERT INTO fechas(curso_fechas_id,fecha)
+					VALUES (:curso_fechas_id, :fecha)";
+		//VALORES PARA REGISTRO
+		$values = array("curso_fechas_id"=>$curso_fechas_id,
+						"fecha"=>$fecha);
+		$oConection = new conectorDB; //instanciamos conector
+		$result = $oConection->consultarBD($query, $values);
+		return $result;
+	}
 }
 
 class CursoPersona{

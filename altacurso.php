@@ -155,6 +155,22 @@ foreach($cursosfecha_registrados as $clave => $valor){
 					});
 				});
 				
+				$(".agregar").on("click", function(){
+					var cfid = $(this).data('cursofechasid');
+					$.ajax({
+						type: "POST",
+						url: "agregarfechasacurso.php",
+						data: {cursofechasid:cfid,fechas:$("#ffechas").val()},
+						success: function(msg){
+							$("#thanks").html(msg);
+							window.location.reload(true);
+						},
+						error: function(){
+							alert("failure");
+						}
+					});
+				});
+				
 				$("#cursofechas").on("click", function(){
 					$("#fusuarios").val(personas);
 					var p = new Array();
@@ -355,12 +371,13 @@ foreach($cursosfecha_registrados as $clave => $valor){
 												foreach($fraux as $fc => $fv){
 													echo '
 													<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; font-size:0.8em; " class="cursoregistrado" >
-													<div class="curso" data-fid="'.$fv['fid'].'">
-														<div class="nombrecurso">
-															<strong>'.($totales=0).'</strong> - '.
-															$fv['nombre'].'
-														</div>
-														<div class="divcerrar"><button type="button" class="cerrar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >&times;</button></div>
+														<div class="curso" data-fid="'.$fv['fid'].'">
+															<div class="nombrecurso">
+																<strong>'.($totales=0).'</strong> - '.
+																$fv['nombre'].'
+															</div>
+															<div class="divagregar"><button type="button" class="agregar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >+</button></div>
+															<div class="divcerrar"><button type="button" class="cerrar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >&times;</button></div>
 														</div>
 													</div>
 													';
