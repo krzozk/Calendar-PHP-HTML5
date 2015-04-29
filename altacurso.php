@@ -311,7 +311,7 @@ foreach($cursosfecha_registrados as $clave => $valor){
 									$i= 0;
 									foreach($pr as $clave => $valor){
 										echo '<li data-id='.$valor['id'].'>'.
-											'<p><input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].' style=" width:35px; height:10px; pattern="[0-9]{2}" onkeypress="return justNumbers(event);" >'.
+											'<p><input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].' style=" width:45px; height:15px; pattern="[0-9]{2}" onkeypress="return justNumbers(event);" >'.
 											' '.$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno'].'</p>'
 										.'</li>';
 										$i++;
@@ -326,7 +326,7 @@ foreach($cursosfecha_registrados as $clave => $valor){
 				</div>
 				<div class="span9">
 					<div id="thanks"></div>
-					<table border="1" style="width: 601px; height: 415px;" >
+					<table border="1" style="width: 100%; height: 608px;" class="table" >
 						<thead>
 							<tr style="height:26px;">
 								<td colspan="7">
@@ -372,14 +372,14 @@ foreach($cursosfecha_registrados as $clave => $valor){
 													$oCursoPersona = new CursoPersona;
 													$participantes = $oCursoPersona->obtenerParticipantesPorCursoFechaId($fv['curso_fechas_id']);
 													echo '
-													<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; font-size:0.8em; " class="cursoregistrado" >
+													<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; font-size:1.1em; " class="cursoregistrado" >
 														<div class="curso" data-fid="'.$fv['fid'].'">
 															<div class="nombrecurso" data-cursofechasid="'.$fv['curso_fechas_id'].'" >
 																<strong>'.($participantes[0]['participantes']).'</strong> - '.
 																$fv['nombre'].'
 															</div>
-															<div class="divagregar"><button type="button" class="agregar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >+</button></div>
-															<div class="divcerrar"><button type="button" class="cerrar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >&times;</button></div>
+															<div class="divagregar"><button type="button" class="pull-right agregar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >+</button></div>
+															<div class="divcerrar"><button type="button" class="pull-right cerrar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >&times;</button></div>
 														</div>
 													</div>
 													';

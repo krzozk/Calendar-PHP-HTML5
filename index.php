@@ -153,7 +153,7 @@ $cfr = array();
 				</div>
 				<div class="span9">
 					<div id="thanks"></div>
-					<table border="1" style="width: 601px; height: 415px;" >
+					<table border="1" style="width: 100%; height: 608px;" class="table" >
 						<thead>
 							<tr style="height:26px;">
 								<td colspan="7">
@@ -196,7 +196,7 @@ $cfr = array();
 												foreach($fraux as $fc => $fv){
 													$oCursoPersona = new CursoPersona;
 													$participantes = $oCursoPersona->obtenerParticipantesPorCursoFechaId($fv['curso_fechas_id']);
-													echo '<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; font-size:0.8em; " class="cursoregistrado" >
+													echo '<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; font-size:1.1em; " class="cursoregistrado" >
 													<strong data-cursofechasid="'.$fv['curso_fechas_id'].'" class="numeroparticipantes" >'.($participantes[0]['participantes']).'</strong> - '.$fv['nombre'].'
 													</div>';
 												}

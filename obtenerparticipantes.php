@@ -26,7 +26,7 @@ if (isset($_POST['cursofechasid'])) {
 		echo 'Participantes';
 		echo '<ul>';
 		foreach($praux as $c => $v){
-			echo '<li><p><input class="target" pattern="[0-9]{2}" type="number" min="0" max="50" value="'.$v['participantes'].'" data-id="'.$v['id'].'" data-cursofechasid="'.$v['curso_fechas_id'].'" style=" width:35px; height:10px; " onkeypress="return justNumbers(event);" /> '.$v['personanombre'].' '.$v['personaapellidopaterno'].' '.$v['personaapellidomaterno'].'</p></li>';
+			echo '<li><p><input class="target" pattern="[0-9]{2}" type="number" min="0" max="50" value="'.$v['participantes'].'" data-id="'.$v['id'].'" data-cursofechasid="'.$v['curso_fechas_id'].'" style=" width:45px; height:15px; " onkeypress="return justNumbers(event);" /> '.$v['personanombre'].' '.$v['personaapellidopaterno'].' '.$v['personaapellidomaterno'].'</p></li>';
 			$participantesTotal += $v['participantes'];
 		}
 		echo '</ul>';
