@@ -160,7 +160,15 @@ class CursoFecha
 		else{
 			return false;
 		}
-    } //Termina funcion registrarCursos()
+    } //Termina funcion registrarCursosFecha()
+	public function eliminarCursoFechaPorId($cursoFechaId){
+		$oConection = new conectorDB; //instanciamos conector
+		$query = "DELETE FROM curso_fechas WHERE id = :id ";
+		//VALORES PARA REGISTRO
+		$values = array("id"=>$cursoFechaId);
+		$result = $oConection->consultarBD($query, $values);
+		return $result;
+	}
 }/// TERMINA CLASE CURSO FECHA ///
 
 class Fechas{
@@ -195,6 +203,28 @@ class Fechas{
 		//VALORES PARA REGISTRO
 		$values = array("curso_fechas_id"=>$curso_fechas_id,
 						"fecha"=>$fecha);
+		$result = $oConection->consultarBD($query, $values);
+		return $result;
+	}
+	public function eliminarFechaOCursoPorFechaId($fecha_id){
+		$consulta = "SELECT f.*, (select count(*) from fechas where fechas.curso_fechas_id = f.curso_fechas_id) as c
+					FROM fechas f
+					WHERE f.id = ".$fecha_id;
+		$valores = null;
+		$oConectar = new conectorDB; //instanciamos conector
+		$fechas = $oConectar->consultarBD($consulta,$valores);
+		
+		if(@$fechas[0]['c']==1){
+			$cp = new CursoPersona;
+			$cp->eliminarParticipantesPorCursoFechaId($fechas[0]['curso_fechas_id']);
+			
+			$cf = new CursoFecha;
+			$cf->eliminarCursoFechaPorId($fechas[0]['curso_fechas_id']);
+		}
+		$oConection = new conectorDB; //instanciamos conector
+		$query = "DELETE FROM fechas WHERE id = :id ";
+		//VALORES PARA REGISTRO
+		$values = array("id"=>$fecha_id);
 		$result = $oConection->consultarBD($query, $values);
 		return $result;
 	}
@@ -235,6 +265,14 @@ class CursoPersona{
 		$values = array("participantes"=>$participantes,
 						"id"=>$id
 						);
+		$result = $oConection->consultarBD($query, $values);
+		return $result;
+	}
+	public function eliminarParticipantesPorCursoFechaId($cursoFechaId){
+		$oConection = new conectorDB; //instanciamos conector
+		$query = "DELETE FROM curso_persona WHERE curso_fechas_id = :curso_fechas_id ";
+		//VALORES PARA REGISTRO
+		$values = array("curso_fechas_id"=>$cursoFechaId);
 		$result = $oConection->consultarBD($query, $values);
 		return $result;
 	}
