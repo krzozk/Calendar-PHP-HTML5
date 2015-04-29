@@ -322,7 +322,7 @@ foreach($cursosfecha_registrados as $clave => $valor){
 					</form>
 					<button class="btn btn-primary" id="cursofechas" >Guardar</button>
 					<br><br>
-					<a href="calendario.php" > Ir a Calendario de Usuarios </a>
+					<a href="index.php" > Ir a Calendario de Usuarios </a>
 				</div>
 				<div class="span9">
 					<div id="thanks"></div>
