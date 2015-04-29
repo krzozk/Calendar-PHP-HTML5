@@ -41,6 +41,21 @@ td{
 	background-repeat: no-repeat;
 }
 
+.editar{
+	background-image: url("editar.png");
+	background-repeat: no-repeat;
+	width:20px;
+	height:20px;
+	background-size: 20px 20px;
+}
+.eliminar{
+	background-image: url("eliminar.png");
+	background-repeat: no-repeat;
+	width:20px;
+	height:20px;
+	background-size: 20px 20px;
+}
+
 .espacio{
 	margin-bottom: 10px;
 }

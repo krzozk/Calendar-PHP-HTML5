@@ -303,7 +303,10 @@ foreach($cursosfecha_registrados as $clave => $valor){
 										}
 									?>
 								</select>
+								<div class="eliminar pull-right"></div>
+								<div class="editar pull-right"></div>
 							</div>
+							
 						</div>
 						<div class="usuarios espacio">
 								<ul>
@@ -311,8 +314,14 @@ foreach($cursosfecha_registrados as $clave => $valor){
 									$i= 0;
 									foreach($pr as $clave => $valor){
 										echo '<li data-id='.$valor['id'].'>'.
-											'<p><input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].' style=" width:45px; height:15px; pattern="[0-9]{2}" onkeypress="return justNumbers(event);" >'.
-											' '.$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno'].'</p>'
+											'<p>
+											<div class="eliminar pull-right"></div>
+											<div class="editar pull-right"></div>
+											
+											<input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].' style=" width:45px; height:15px; pattern="[0-9]{2}" onkeypress="return justNumbers(event);" >'.
+											' '.$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno'].'
+											
+											</p>'
 										.'</li>';
 										$i++;
 									}
