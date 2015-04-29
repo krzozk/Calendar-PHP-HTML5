@@ -369,11 +369,13 @@ foreach($cursosfecha_registrados as $clave => $valor){
 													}
 												}
 												foreach($fraux as $fc => $fv){
+													$oCursoPersona = new CursoPersona;
+													$participantes = $oCursoPersona->obtenerParticipantesPorCursoFechaId($fv['curso_fechas_id']);
 													echo '
 													<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; font-size:0.8em; " class="cursoregistrado" >
 														<div class="curso" data-fid="'.$fv['fid'].'">
-															<div class="nombrecurso">
-																<strong>'.($totales=0).'</strong> - '.
+															<div class="nombrecurso" data-cursofechasid="'.$fv['curso_fechas_id'].'" >
+																<strong>'.($participantes[0]['participantes']).'</strong> - '.
 																$fv['nombre'].'
 															</div>
 															<div class="divagregar"><button type="button" class="agregar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >+</button></div>

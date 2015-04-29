@@ -286,4 +286,11 @@ class CursoPersona{
 		$result = $oConection->consultarBD($query, $values);
 		return $result;
 	}
+	public function obtenerParticipantesPorCursoFechaId($cursofechaid){
+		$consulta = "SELECT sum(participantes) participantes FROM curso_persona WHERE curso_fechas_id = ".$cursofechaid;
+		$valores = null;
+		$oConectar = new conectorDB; //instanciamos conector
+		$this->cursopersonas = $oConectar->consultarBD($consulta,$valores);
+		return $this->cursopersonas;
+	} //Termina funcion obtenerPersonasPorIdCurso();
 }

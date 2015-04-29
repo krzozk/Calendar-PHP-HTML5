@@ -194,8 +194,11 @@ $cfr = array();
 													}
 												}
 												foreach($fraux as $fc => $fv){
-													echo '<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; font-size:0.8em; " class="cursoregistrado" ><strong>'.($totales=0).'</strong> - '.$fv['nombre'].'
-														</div>';
+													$oCursoPersona = new CursoPersona;
+													$participantes = $oCursoPersona->obtenerParticipantesPorCursoFechaId($fv['curso_fechas_id']);
+													echo '<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; font-size:0.8em; " class="cursoregistrado" >
+													<strong data-cursofechasid="'.$fv['curso_fechas_id'].'" class="numeroparticipantes" >'.($participantes[0]['participantes']).'</strong> - '.$fv['nombre'].'
+													</div>';
 												}
 											?>
 										</td>

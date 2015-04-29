@@ -22,27 +22,40 @@ if (isset($_POST['cursofechasid'])) {
 		}
 	}
 	if($praux){
+		$participantesTotal = 0;
+		echo 'Participantes';
 		echo '<ul>';
 		foreach($praux as $c => $v){
-			echo '<li><p><input class="target" pattern="[0-9]{2}" type="number" min="0" max="50" value="'.$v['participantes'].'" data-id="'.$v['id'].'" style=" width:35px; height:10px; " onkeypress="return justNumbers(event);" /> '.$v['personanombre'].' '.$v['personaapellidopaterno'].' '.$v['personaapellidomaterno'].'</p></li>';
+			echo '<li><p><input class="target" pattern="[0-9]{2}" type="number" min="0" max="50" value="'.$v['participantes'].'" data-id="'.$v['id'].'" data-cursofechasid="'.$v['curso_fechas_id'].'" style=" width:35px; height:10px; " onkeypress="return justNumbers(event);" /> '.$v['personanombre'].' '.$v['personaapellidopaterno'].' '.$v['personaapellidomaterno'].'</p></li>';
+			$participantesTotal += $v['participantes'];
 		}
 		echo '</ul>';
+		if($participantesTotal==1){
+			echo '<strong class="numeroparticipantes" data-cursofechasid="'.$v['curso_fechas_id'].'" >'.$participantesTotal. '</strong> participante';
+		}else{
+			echo '<strong class="numeroparticipantes" data-cursofechasid="'.$v['curso_fechas_id'].'" >'.$participantesTotal. '</strong> participantes';
+		}
 		echo '<script>
-				
 				$( ".target" ).change(function() {
-					//if(is_integer($(this).val())){
-						$.ajax({
-							type: "POST",
-							url: "actualizarparticipantes.php",
-							data: {cursopersonaid: $(this).data("id"),participantes:$(this).val()},
-							success: function(msg){
-								$("#thanks").html(msg);
-							},
-							error: function(){
-								alert("failure");
-							}
-						});
-					//}
+					var current= $(this).data("cursofechasid");
+					var total = 0;
+					$(".target").each(function(){
+						total=total+parseInt($(this).val());
+					})
+					$(".numeroparticipantes[data-cursofechasid=\'"+current+"\']").html(total);
+					
+					$.ajax({
+						type: "POST",
+						url: "actualizarparticipantes.php",
+						data: {cursopersonaid: $(this).data("id"),participantes:$(this).val()},
+						success: function(msg){
+							$("#thanks").html(msg);
+						},
+						error: function(){
+							alert("failure");
+						}
+					});
+					
 				});
 			  </script>
 				';
