@@ -230,7 +230,111 @@ foreach($cursosfecha_registrados as $clave => $valor){
 					}
 					
 				});*/
-
+				$('.pull-right.color').change(function(){
+					var vcolor = $(this).val();
+					var cfid = $(this).data('cursofechasid');
+					$.ajax({
+						type: "POST",
+						url: "editarcursofecha.php",
+						data: {cursofechasid:cfid,color:vcolor},
+						success: function(msg){
+							$('.cursoregistrado[data-cursofechasid="'+cfid+'"]').css('background-color', vcolor);
+							$('.pull-right.color[data-cursofechasid="'+cfid+'"]').val(vcolor);
+							$("#thanks").html(msg);
+						},
+						error: function(){
+							alert("failure");
+						}
+					});
+				});
+				
+				$('#eliminarcurso').click(function(){
+					var id = $('#curso').val();
+					var txt;
+					var r = confirm("También se eliminarán los cursos agendados.");
+					if (r == true) {
+						$.ajax({
+							type: "POST",
+							url: "eliminarcurso.php",
+							data: {id:id},
+							success: function(msg){
+								$('option[data-id="'+id+'"]').remove();
+								$("#thanks").html(msg);
+							},
+							error: function(){
+								alert("failure");
+							}
+						});
+					} else {
+						
+					}
+				});
+				
+				$(".eliminarusuario").on("click", function(){
+					var id = $(this).data('id');
+					var txt;
+					var r = confirm("Se eliminará el usuario de los cursos agendados.");
+					if (r == true) {
+						$.ajax({
+							type: "POST",
+							url: "eliminarusuario.php",
+							data: {id:id},
+							success: function(msg){
+								$('li[data-id="'+id+'"]').remove();
+								$("#thanks").html(msg);
+							},
+							error: function(){
+								alert("failure");
+							}
+						});
+					} else {
+						
+					}
+					
+				});
+			
+				$('#editarcurso').click(function(){
+					var curso = $('#curso').val();
+					//almacenamos el valor devuelvo por el prompt
+					var strNombre=prompt('Escribe el nuevo nombre del curso');
+					//comparamos valores nulos y cadenas vacinas
+					if(strNombre!=null && strNombre!=''){
+						$.ajax({
+							type: "POST",
+							url: "editarcurso.php",
+							data: {id:curso,nombre:strNombre},
+							success: function(msg){
+								$('option[data-id="'+curso+'"]').html(strNombre);
+								$("#thanks").html(msg);
+							},
+							error: function(){
+								alert("failure");
+							}
+						});
+					}
+				});
+				
+				$('.editarusuario').click(function(){
+					var usuario = $(this).data('id');
+					//almacenamos el valor devuelvo por el prompt
+					var strNombre=prompt('Escribe el nuevo nombre del usuario');
+					//comparamos valores nulos y cadenas vacinas
+					if(strNombre!=null && strNombre!=''){
+						$.ajax({
+							type: "POST",
+							url: "editarusuario.php",
+							data: {id:usuario,nombre:strNombre},
+							success: function(msg){
+								$("span[data-id="+usuario+"]").html(strNombre);
+								$("#thanks").html(msg);
+							},
+							error: function(){
+								alert("failure");
+							}
+						});
+					}
+				});
+				
 			});
 			
 			$(function() {
@@ -244,6 +348,7 @@ foreach($cursosfecha_registrados as $clave => $valor){
 							$("#thanks").html(msg);
 							$('form.usuario')[0].reset();
 							$("#form-content").modal('hide');
+							window.location.reload(true);
 						},
 						error: function(){
 							alert("failure");
@@ -259,6 +364,7 @@ foreach($cursosfecha_registrados as $clave => $valor){
 							$("#thanks").html(msg);
 							$('form.curso')[0].reset();
 							$("#form-curso").modal('hide');
+							window.location.reload(true);
 						},
 						error: function(){
 							alert("failure");
@@ -266,7 +372,9 @@ foreach($cursosfecha_registrados as $clave => $valor){
 					});
 				});
 			});
-
+			
+			
+				
 		</script>
 	</head>
 	<body BGCOLOR="#f3f3f3">
@@ -294,7 +402,7 @@ foreach($cursosfecha_registrados as $clave => $valor){
 						<div class="form-group espacio">
 							<label class="col-sm-1" for="color">Curso:</label>
 							<div class="col-sm-2">
-								<select name="curso">
+								<select name="curso" id="curso" >
 									<?php 
 										foreach($cr as $clave => $valor){
 											echo '<option value='.$valor['id'].' data-id='.$valor['id'].'>'.
@@ -303,8 +411,8 @@ foreach($cursosfecha_registrados as $clave => $valor){
 										}
 									?>
 								</select>
-								<div class="eliminar pull-right"></div>
-								<div class="editar pull-right"></div>
+								<div class="eliminar pull-right" id="eliminarcurso" ></div>
+								<div class="editar pull-right" id="editarcurso" ></div>
 							</div>
 							
 						</div>
@@ -313,16 +421,11 @@ foreach($cursosfecha_registrados as $clave => $valor){
 								<?php 
 									$i= 0;
 									foreach($pr as $clave => $valor){
-										echo '<li data-id='.$valor['id'].'>'.
-											'<p>
-											<div class="eliminar pull-right"></div>
-											<div class="editar pull-right"></div>
-											
-											<input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].' style=" width:45px; height:15px; pattern="[0-9]{2}" onkeypress="return justNumbers(event);" >'.
-											' '.$valor['nombre'].' '.$valor['apellido_paterno'].' '.$valor['apellido_materno'].'
-											
-											</p>'
-										.'</li>';
+										echo '<li data-id='.$valor['id'].'>
+												<div class="eliminarusuario pull-right" data-id='.$valor['id'].' data-nombre="'.$valor['nombre'].'" ></div>'.
+												'<div class="editarusuario pull-right" data-id='.$valor['id'].' data-nombre="'.$valor['nombre'].'" ></div>'.
+												'<p><input type="number" id="participantes'.$i.'" min="0" max="50" value="0" data-id='.$valor['id'].' style=" width:45px; height:15px; pattern="[0-9]{2}" onkeypress="return justNumbers(event);" /><span style="padding: 10px;" data-id="'.$valor['id'].'" >'.
+												$valor['nombre'].' </span></p></li>';
 										$i++;
 									}
 								?>
@@ -384,8 +487,9 @@ foreach($cursosfecha_registrados as $clave => $valor){
 													<div data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" style="background-color:'.$fv['color'].'; font-size:1.1em; " class="cursoregistrado" >
 														<div class="curso" data-fid="'.$fv['fid'].'">
 															<div class="nombrecurso" data-cursofechasid="'.$fv['curso_fechas_id'].'" >
-															<button type="button" class="pull-right cerrar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >&times;</button>
+																<button type="button" class="pull-right cerrar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >&times;</button>
 																<button type="button" class="pull-right agregar" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'" >+</button>
+																<input name="color" type="color" value="'.$fv['color'].'" class="pull-right color" data-fid="'.$fv['fid'].'" data-fecha="'.$fechadia.'" data-cursofechasid="'.$fv['curso_fechas_id'].'" data-cursoid="'.$fv['curso_id'].'" data-nombre="'.$fv['nombre'].'" data-color="'.$fv['color'].'"/>
 																<strong>'.($participantes[0]['participantes']).'</strong> - '.
 																$fv['nombre'].'
 																
@@ -417,10 +521,6 @@ foreach($cursosfecha_registrados as $clave => $valor){
 											<ul class="nav nav-list">
 												<li class="nav-header">Nombre</li>
 												<li><input class="input-xlarge" value="" type="text" name="nombre" value=""></li>
-												<li class="nav-header">Apellido Paterno</li>
-												<li><input class="input-xlarge" value="" type="text" name="apellido_paterno" value=""></li>
-												<li class="nav-header">Apellido Materno</li>
-												<li><input class="input-xlarge" value="" type="text" name="apellido_materno" value=""></li>
 											</ul> 
 										</div>
 									</fieldset>

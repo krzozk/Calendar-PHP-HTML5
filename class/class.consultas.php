@@ -63,14 +63,12 @@ class Persona
 		$this->personas = $oConectar->consultarBD($consulta,$valores);
 		return $this->personas;
 	} //Termina funcion obtenerPersonasPorId();
-	public function registrarPersonas($nombre,$apellidoPaterno,$apellidoMaterno){
+	public function registrarPersonas($nombre){
         $registrar = false; //creamos una variable de control
-		$consulta = "INSERT INTO personas(nombre,apellido_paterno,apellido_materno)
-					VALUES (:nombre, :apellido_paterno, :apellido_materno)";
+		$consulta = "INSERT INTO personas(nombre)
+					VALUES (:nombre)";
 		//VALORES PARA REGISTRO
-		$valores = array("nombre"=>$nombre,
-						"apellido_paterno"=>$apellidoPaterno,
-						"apellido_materno"=>$apellidoMaterno);
+		$valores = array("nombre"=>$nombre);
 		$oConexion = new conectorDB; //instanciamos conector
 		$registrar = $oConexion->consultarBD($consulta, $valores);
 		if($registrar !== false){
@@ -80,6 +78,28 @@ class Persona
 			return false;
 		}
     } //Termina funcion registrarUsuarios()
+	public function eliminarPersonaPorId($persona){
+		$consulta = "DELETE FROM personas WHERE id = ".$persona;
+		$valores = null;
+		$oConectar = new conectorDB; //instanciamos conector
+		$this->personas = $oConectar->consultarBD($consulta,$valores);
+		
+		///		
+		$consulta = "DELETE FROM curso_persona WHERE persona_id NOT IN (SELECT id FROM personas)";
+		$valores = null;
+		$oConectar = new conectorDB; //instanciamos conector
+		$oConectar->consultarBD($consulta,$valores);
+		///
+		
+		return $this->personas;
+	} //Termina funcion eliminarPersonaPorId();
+	public function editar($persona,$nombre){
+		$consulta = "UPDATE personas SET nombre = :nombre WHERE id = ".$persona;
+		$values = array("nombre"=>$nombre);
+		$oConectar = new conectorDB; //instanciamos conector
+		$this->personas = $oConectar->consultarBD($consulta,$values);
+		return $this->personas;
+	} //Termina funcion editarPersonaPorId();
 }/// TERMINA CLASE USUARIOS ///
 
 class Curso
@@ -115,6 +135,39 @@ class Curso
 		$this->cursos = $oConectar->consultarBD($consulta,$valores);
 		return $this->cursos;
 	} //Termina funcion obtenerCursos();
+	public function eliminarCursoPorId($curso){
+		$consulta = "DELETE FROM cursos WHERE id = ".$curso;
+		$valores = null;
+		$oConectar = new conectorDB; //instanciamos conector
+		$this->cursos = $oConectar->consultarBD($consulta,$valores);
+		
+		///
+		$consulta = "DELETE FROM curso_fechas WHERE curso_id = ".$curso;
+		$valores = null;
+		$oConectar = new conectorDB; //instanciamos conector
+		$oConectar->consultarBD($consulta,$valores);
+		
+		$consulta = "DELETE FROM curso_persona WHERE curso_fechas_id NOT IN (SELECT id FROM curso_fechas)";
+		$valores = null;
+		$oConectar = new conectorDB; //instanciamos conector
+		$oConectar->consultarBD($consulta,$valores);
+		
+		$consulta = "DELETE FROM fechas WHERE curso_fechas_id NOT IN (SELECT id FROM curso_fechas)";
+		$valores = null;
+		$oConectar = new conectorDB; //instanciamos conector
+		$oConectar->consultarBD($consulta,$valores);
+		
+		///
+		
+		return $this->cursos;
+	} //Termina funcion eliminarCursoPorId();
+	public function editar($curso,$nombre){
+		$consulta = "UPDATE cursos SET nombre = :nombre WHERE id = ".$curso;
+		$valores = array("nombre"=>$nombre);
+		$oConectar = new conectorDB; //instanciamos conector
+		$this->cursos = $oConectar->consultarBD($consulta,$valores);
+		return $this->cursos;
+	} //Termina funcion editarCursoPorId();
 }/// TERMINA CLASE CURSOS ///
 
 class CursoFecha
@@ -166,6 +219,14 @@ class CursoFecha
 		$query = "DELETE FROM curso_fechas WHERE id = :id ";
 		//VALORES PARA REGISTRO
 		$values = array("id"=>$cursoFechaId);
+		$result = $oConection->consultarBD($query, $values);
+		return $result;
+	}
+	public function cambiarColorPorCursoFechaId($cursoFechaId,$color){
+		$oConection = new conectorDB; //instanciamos conector
+		$query = "UPDATE curso_fechas SET color = :color WHERE id = ".$cursoFechaId;
+		//VALORES PARA REGISTRO
+		$values = array("color"=>$color);
 		$result = $oConection->consultarBD($query, $values);
 		return $result;
 	}

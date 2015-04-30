@@ -47,6 +47,7 @@ td{
 	width:20px;
 	height:20px;
 	background-size: 20px 20px;
+	cursor: pointer;
 }
 .eliminar{
 	background-image: url("eliminar.png");
@@ -54,6 +55,23 @@ td{
 	width:20px;
 	height:20px;
 	background-size: 20px 20px;
+	cursor: pointer;
+}
+.editarusuario{
+	background-image: url("editar.png");
+	background-repeat: no-repeat;
+	width:20px;
+	height:20px;
+	background-size: 20px 20px;
+	cursor: pointer;
+}
+.eliminarusuario{
+background-image: url("eliminar.png");
+	background-repeat: no-repeat;
+	width:20px;
+	height:20px;
+	background-size: 20px 20px;
+	cursor: pointer;
 }
 
 .espacio{
@@ -113,6 +131,16 @@ td{
 	width:20%;
 	position:relative;
 }
-
+.color{
+	line-height: 14px;
+	width:25px;
+	cursor: pointer;
+	/*
+	text-align: right;
+	vertical-align:top;
+	line-height: 9px;
+	font-size: 1.2em;
+	*/
+}
 .numeroparticipantes{
 }
